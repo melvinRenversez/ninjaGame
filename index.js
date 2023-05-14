@@ -127,6 +127,24 @@ function rectangleCollision({ rectangle1, rectangle2 }) {
        )
 }
 
+let timer = 10
+function decreaseTimer(){
+       setTimeout(decreaseTimer, 1000)
+       if ( timer > 0) {
+              timer --
+              document.querySelector('#timer').innerHTML = timer
+       }
+
+       if ( timer == 0 ) {
+              if ( player.health === enemy.health){
+                     document.querySelector('#displayText').innerHTML = 'Egalite'
+                     document.querySelector('#displayText').style.display = 'flex'
+              }
+       }
+}
+
+decreaseTimer()
+
 function animate() {
        window.requestAnimationFrame(animate)
        c.fillStyle = 'black'
@@ -159,7 +177,8 @@ function animate() {
 
        if (rectangleCollision({ rectangle1: enemy, rectangle2: player }) && enemy.isAttacking) {
               enemy.isAttacking = false 
-              console.log('enemy touch')
+              player.health -= 20
+              document.querySelector('#playerHealth').style.width = player.health + '%'
        }
 
 }
