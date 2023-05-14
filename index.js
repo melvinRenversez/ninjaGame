@@ -6,19 +6,32 @@ canvas.height = 576
 
 c.fillRect(0, 0, canvas.width, canvas.height)
 
-const gravity = 0.2
+const gravity = 0.7
+
+const playerSpeed = 5
+const playerJump = -20
 
 class Sprite  {
-       constructor({position, velocity}){
+       constructor({position, velocity, color}){
               this.position = position 
               this.velocity = velocity
               this.height = 150
               this.lastKey
+              this.attackBox = {
+                     position: this.position ,
+                     width: 100,
+                     height: 50
+              }
+              this.color = color
        }
 
        draw() {
-              c.fillStyle = 'red'
+              c.fillStyle = this.color
               c.fillRect(this.position.x, this.position.y, 50, this.height)
+
+              //attack boxes
+              c.fillStyle = 'green'
+              c.fillRect(this.attackBox.position.x, this.attackBox.position.y, this.attackBox.width , this.attackBox.height)
        }
 
        update(){
@@ -42,7 +55,8 @@ const player = new Sprite({
        velocity:{
               x: 0,
               y: 10
-       }
+       },
+       color: 'red'
 })
 
 const enemy = new Sprite({
@@ -53,7 +67,8 @@ const enemy = new Sprite({
        velocity: {
               x: 0,
               y: 10
-       }
+       },
+       color: 'blue'
 })
 
 console.log(player)
@@ -87,18 +102,23 @@ function animate() {
 
        //player movement
        player.velocity.x = 0
-       if (keys.d.pressed && lastKey === 'd') {
-              player.velocity.x = 1
-       }else if (keys.q.pressed && lastKey === 'q') {
-              player.velocity.x = -1
+       if (keys.d.pressed && player.lastKey === 'd') {
+              player.velocity.x = playerSpeed
+       }else if (keys.q.pressed && player.lastKey === 'q') {
+              player.velocity.x = -playerSpeed
        }
 
        //enemy movement
        enemy.velocity.x = 0
        if (keys.ArrowRight.pressed && enemy.lastKey === 'ArrowRight') {
-              enemy.velocity.x = 1
+              enemy.velocity.x = playerSpeed
        }else if (keys.ArrowLeft.pressed && enemy.lastKey === 'ArrowLeft') {
-              enemy.velocity.x = -1
+              enemy.velocity.x = -playerSpeed
+       }
+
+       //colision
+       if (player.attackBox.position.x + player.attackBox.width >= enemy.position.x) {
+              console.log('touch')
        }
 
 }
@@ -109,14 +129,14 @@ window.addEventListener('keydown', (event) => {
        switch (event.key){
               case 'd':
                      keys.d.pressed = true
-                     lastKey = 'd'
+                     player.lastKey = 'd'
                      break
               case 'q':
                      keys.q.pressed = true
-                     lastKey = 'q'
+                     player.lastKey = 'q'
                      break
               case 's':
-                     player.velocity.y = -10
+                     player.velocity.y = playerJump
                      break
 
 
@@ -129,7 +149,7 @@ window.addEventListener('keydown', (event) => {
                      enemy.lastKey = 'ArrowLeft'
                      break
               case 'ArrowUp':
-                     enemy.velocity.y = -10
+                     enemy.velocity.y = playerJump
                      break
 
        }
