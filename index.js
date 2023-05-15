@@ -23,7 +23,7 @@ const shop = new Sprite({
        },
        imageSrc: 'assets/decor/shop.png',
        scale: 2.75,
-       frameMax: 6
+       framesMax: 6
 })
 
 const playerSpeed = 5
@@ -42,6 +42,13 @@ const player = new Fighter({
        offset:{
               x: 0,
               y: 0
+       },
+       imageSrc: 'assets/player1/Sprites/Idle.png',
+       framesMax: 8,
+       scale: 2.5,
+       offset: {
+              x: 215,
+              y: 157
        }
 })
 
@@ -91,7 +98,7 @@ function animate() {
        background.update()
        shop.update()
        player.update()
-       enemy.update()
+       // enemy.update()
 
        //player movement
        player.velocity.x = 0
